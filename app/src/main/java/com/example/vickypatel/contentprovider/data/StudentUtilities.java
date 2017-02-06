@@ -5,4 +5,5 @@ package com.example.vickypatel.contentprovider.data;
  */
 
 public class StudentUtilities {
+
 }
