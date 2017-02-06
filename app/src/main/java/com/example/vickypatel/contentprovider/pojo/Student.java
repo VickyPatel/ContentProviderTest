@@ -12,13 +12,30 @@ public class Student implements Parcelable {
     private int studentId;
     private String name;
     private String surname;
+    private String address;
     private String zipCode;
+
+    public Student(int id, String name, String surname,String address, String zipCode) {
+        this.studentId = id;
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.zipCode = zipCode;
+    }
+
+    public Student(String name, String surname,String address, String zipCode) {
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.zipCode = zipCode;
+    }
 
 
     protected Student(Parcel in) {
         studentId = in.readInt();
         name = in.readString();
         surname = in.readString();
+        address = in.readString();
         zipCode = in.readString();
     }
 
@@ -44,15 +61,16 @@ public class Student implements Parcelable {
         dest.writeInt(studentId);
         dest.writeString(name);
         dest.writeString(surname);
+        dest.writeString(address);
         dest.writeString(zipCode);
     }
 
-    public String getSurname() {
-        return surname;
+    public int getStudentId() {
+        return studentId;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
     public String getName() {
@@ -63,12 +81,20 @@ public class Student implements Parcelable {
         this.name = name;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getZipCode() {
@@ -85,6 +111,7 @@ public class Student implements Parcelable {
                 "studentId=" + studentId +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", address='" + address + '\'' +
                 ", zipCode='" + zipCode + '\'' +
                 '}';
     }
