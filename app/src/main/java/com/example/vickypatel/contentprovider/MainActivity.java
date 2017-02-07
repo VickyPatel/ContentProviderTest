@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,8 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Student> studentArrayList = new ArrayList<>();
     private ListViewAdapter adapter;
-    private  ListView listView;
+    private ListViewCursorAdapter cursorAdapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +45,24 @@ public class MainActivity extends AppCompatActivity
         Button getDataByNameButton = (Button) findViewById(R.id.get_data_by_name_button);
         Button getDataByZIPCodeButton = (Button) findViewById(R.id.get_data_by_zip_code_button);
 
-
-        listView = (ListView) findViewById(R.id.list_view);
-        adapter = new ListViewAdapter(this, studentArrayList);
-        listView.setAdapter(adapter);
-
         setDataButton.setOnClickListener(this);
         getDataButton.setOnClickListener(this);
         getDataByNameButton.setOnClickListener(this);
         getDataByZIPCodeButton.setOnClickListener(this);
 
+        Cursor cursor = getContentResolver().query(
+                StudentEntry.CONTENT_URI,
+                null, null, null, null);
+
+        listView = (ListView) findViewById(R.id.list_view);
+        adapter = new ListViewAdapter(this, studentArrayList);
+        cursorAdapter = new ListViewCursorAdapter(this, cursor, false);
+//        listView.setAdapter(adapter);
+        listView.setAdapter(cursorAdapter);
+
+//        getDataButton.performClick();
+//        getSupportLoaderManager().initLoader(
+//                GET_DATA_LOADER_ID, null, this);
 
     }
 
@@ -131,25 +141,14 @@ public class MainActivity extends AppCompatActivity
         System.out.println("MainActivity.onLoadFinished");
         System.out.println("Loader id  " + loader.getId());
 
-        ArrayList<Student> studentArrayList = new ArrayList<>();
-        if (cur != null) {
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                studentArrayList.add(StudentUtilities.getStudentFromCursor(cur));
-                cur.moveToNext();
-            }
-        }
-        for (Student student :
-                studentArrayList) {
-            System.out.println(student.toString());
-        }
+//        listView.setAdapter(
+//                new ListViewAdapter(this, studentArrayList));
 
-        listView.setAdapter(
-                new ListViewAdapter(this, studentArrayList));
+        cursorAdapter.swapCursor(cur);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        cursorAdapter.swapCursor(null);
     }
 }
