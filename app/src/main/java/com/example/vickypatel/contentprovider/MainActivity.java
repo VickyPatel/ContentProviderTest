@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.vickypatel.contentprovider.data.StudentContract;
@@ -28,6 +29,10 @@ public class MainActivity extends AppCompatActivity
     private static final int GET_DATA_BY_NAME_LOADER_ID = 2;
     private static final int GET_DATA_BY_ZIP_CODE_LOADER_ID = 3;
 
+    private ArrayList<Student> studentArrayList = new ArrayList<>();
+    private ListViewAdapter adapter;
+    private  ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +43,16 @@ public class MainActivity extends AppCompatActivity
         Button getDataByNameButton = (Button) findViewById(R.id.get_data_by_name_button);
         Button getDataByZIPCodeButton = (Button) findViewById(R.id.get_data_by_zip_code_button);
 
+
+        listView = (ListView) findViewById(R.id.list_view);
+        adapter = new ListViewAdapter(this, studentArrayList);
+        listView.setAdapter(adapter);
+
         setDataButton.setOnClickListener(this);
         getDataButton.setOnClickListener(this);
         getDataByNameButton.setOnClickListener(this);
         getDataByZIPCodeButton.setOnClickListener(this);
+
 
     }
 
@@ -132,6 +143,9 @@ public class MainActivity extends AppCompatActivity
                 studentArrayList) {
             System.out.println(student.toString());
         }
+
+        listView.setAdapter(
+                new ListViewAdapter(this, studentArrayList));
     }
 
     @Override

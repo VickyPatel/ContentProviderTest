@@ -11,43 +11,53 @@
     tools:context="com.example.vickypatel.contentprovider.MainActivity">
 
     <Button
+        android:text="Get data by zip code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/get_data_by_zip_code_button"
+        android:textAllCaps="false"
+        android:layout_below="@+id/get_data_by_name_button"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/get_data_by_zip_code_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
         android:id="@+id/insert_data_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Insert Student data"
+        android:text="Insert data"
         android:textAllCaps="false"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/get_data_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Student data"
-        android:textAllCaps="false"
-        android:layout_below="@+id/insert_data_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/get_data_by_name_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Student data by name"
+        android:text="Get data by name"
         android:textAllCaps="false"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/get_data_button"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
-        android:text="Get Student by zip code"
+        android:id="@+id/get_data_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/get_data_by_name_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:id="@+id/get_data_by_zip_code_button"
-        android:textAllCaps="false"/>
+        android:text="Get data"
+        android:textAllCaps="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/get_data_by_zip_code_button"
+        android:layout_alignStart="@+id/get_data_by_zip_code_button"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp" />
 
 </RelativeLayout>
