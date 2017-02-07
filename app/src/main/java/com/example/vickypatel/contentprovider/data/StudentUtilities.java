@@ -1,6 +1,7 @@
 package com.example.vickypatel.contentprovider.data;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.example.vickypatel.contentprovider.data.StudentContract.StudentEntry;
 import com.example.vickypatel.contentprovider.pojo.Student;
@@ -30,4 +31,24 @@ public class StudentUtilities {
         return studentValues;
     }
 
+    public static Student getStudentFromCursor(Cursor cur){
+        Student student = new Student();
+        student.setStudentId(
+                cur.getInt(
+                        cur.getColumnIndex(StudentEntry._ID))
+        );
+        student.setName(
+                cur.getString(
+                        cur.getColumnIndex(StudentEntry.COLUMN_NAME)));
+        student.setSurname(
+                cur.getString(
+                        cur.getColumnIndex(StudentEntry.COLUMN_SURNAME)));
+        student.setAddress(
+                cur.getString(
+                        cur.getColumnIndex(StudentEntry.COLUMN_ADDRESS)));
+        student.setZipCode(
+                cur.getString(
+                        cur.getColumnIndex(StudentEntry.COLUMN_ZIP_CODE)));
+        return student;
+    }
 }

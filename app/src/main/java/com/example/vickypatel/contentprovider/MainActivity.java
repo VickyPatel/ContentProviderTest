@@ -4,6 +4,9 @@ import android.content.ContentUris;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +21,12 @@ import com.example.vickypatel.contentprovider.pojo.Student;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int GET_DATA_LOADER_ID = 1;
+    private static final int GET_DATA_BY_NAME_LOADER_ID = 2;
+    private static final int GET_DATA_BY_ZIP_CODE_LOADER_ID = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +42,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getDataButton.setOnClickListener(this);
         getDataByNameButton.setOnClickListener(this);
         getDataByZIPCodeButton.setOnClickListener(this);
+
     }
 
 
     @Override
     public void onClick(View v) {
         Cursor cur;
-        ArrayList<Student> studentsList;
+        ArrayList<Student> studentArrayList;
 
         switch (v.getId()) {
             case R.id.insert_data_button:
-                studentsList = StudentUtilities.getStudentList();
+                studentArrayList = StudentUtilities.getStudentList();
                 for (Student student :
-                        studentsList) {
+                        studentArrayList) {
                     Uri uri = getApplicationContext().getContentResolver().insert(
                             StudentEntry.CONTENT_URI,
                             StudentUtilities.createStudentValues(student));
@@ -55,124 +64,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.get_data_button:
-                cur = getContentResolver().query(StudentEntry.CONTENT_URI,
-                        null, null, null, null);
-                ArrayList<Student> studentArrayList = new ArrayList<>();
-                try {
-                    cur.moveToFirst();
-                    while (!cur.isAfterLast()) {
-                        Student student = new Student();
-                        student.setStudentId(
-                                cur.getInt(
-                                        cur.getColumnIndex(StudentEntry._ID))
-                        );
-                        student.setName(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_NAME)));
-                        student.setSurname(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_SURNAME)));
-                        student.setAddress(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_ADDRESS)));
-                        student.setZipCode(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_ZIP_CODE)));
-                        studentArrayList.add(student);
-                        cur.moveToNext();
-                    }
-
-                } finally {
-                    cur.close();
-                }
-
-                for (Student student :
-                        studentArrayList) {
-                    System.out.println(student.toString());
-                }
+                getSupportLoaderManager().initLoader(
+                        GET_DATA_LOADER_ID, null, this);
                 break;
             case R.id.get_data_by_name_button:
-                cur = getContentResolver().query(
+                getSupportLoaderManager().initLoader(
+                        GET_DATA_BY_NAME_LOADER_ID, null, this);
+                break;
+            case R.id.get_data_by_zip_code_button:
+                getSupportLoaderManager().initLoader(
+                        GET_DATA_BY_ZIP_CODE_LOADER_ID, null, this);
+                break;
+        }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        System.out.println("Loader id " + id);
+        CursorLoader cursorLoader = null;
+        switch (id) {
+            case GET_DATA_LOADER_ID:
+                cursorLoader = new CursorLoader(
+                        this,
+                        StudentEntry.CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null);
+                break;
+            case GET_DATA_BY_NAME_LOADER_ID:
+                cursorLoader = new CursorLoader(
+                        this,
                         Uri.withAppendedPath(StudentEntry.CONTENT_URI, "name"),
                         null,
                         null,
                         new String[]{"Jacky"},
                         null);
-
-                studentArrayList = new ArrayList<>();
-                try {
-                    cur.moveToFirst();
-                    while (!cur.isAfterLast()) {
-                        Student student = new Student();
-                        student.setStudentId(
-                                cur.getInt(
-                                        cur.getColumnIndex(StudentEntry._ID)));
-                        student.setName(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_NAME)));
-                        student.setSurname(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_SURNAME)));
-                        student.setAddress(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_ADDRESS)));
-                        student.setZipCode(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_ZIP_CODE)));
-                        studentArrayList.add(student);
-                        cur.moveToNext();
-                    }
-
-                } finally {
-                    cur.close();
-                }
-
-                for (Student student :
-                        studentArrayList) {
-                    System.out.println(student.toString());
-                }
                 break;
-            case R.id.get_data_by_zip_code_button:
-                cur = getContentResolver().query(
+            case GET_DATA_BY_ZIP_CODE_LOADER_ID:
+                cursorLoader = new CursorLoader(
+                        this,
                         Uri.withAppendedPath(StudentEntry.CONTENT_URI, "zipcode"),
                         null,
                         null,
                         new String[]{"396110"},
                         null);
-
-                studentArrayList = new ArrayList<>();
-                try {
-                    cur.moveToFirst();
-                    while (!cur.isAfterLast()) {
-                        Student student = new Student();
-                        student.setStudentId(
-                                cur.getInt(
-                                        cur.getColumnIndex(StudentEntry._ID)));
-                        student.setName(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_NAME)));
-                        student.setSurname(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_SURNAME)));
-                        student.setAddress(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_ADDRESS)));
-                        student.setZipCode(
-                                cur.getString(
-                                        cur.getColumnIndex(StudentEntry.COLUMN_ZIP_CODE)));
-                        studentArrayList.add(student);
-                        cur.moveToNext();
-                    }
-
-                } finally {
-                    cur.close();
-                }
-
-                for (Student student :
-                        studentArrayList) {
-                    System.out.println(student.toString());
-                }
                 break;
         }
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cur) {
+
+        System.out.println("MainActivity.onLoadFinished");
+        System.out.println("Loader id  " + loader.getId());
+
+        ArrayList<Student> studentArrayList = new ArrayList<>();
+        if (cur != null) {
+            cur.moveToFirst();
+            while (!cur.isAfterLast()) {
+                studentArrayList.add(StudentUtilities.getStudentFromCursor(cur));
+                cur.moveToNext();
+            }
+        }
+        for (Student student :
+                studentArrayList) {
+            System.out.println(student.toString());
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
