@@ -51,6 +51,10 @@ public class Student implements Parcelable {
         }
     };
 
+    public Student() {
+
+    }
+
     @Override
     public int describeContents() {
         return 0;

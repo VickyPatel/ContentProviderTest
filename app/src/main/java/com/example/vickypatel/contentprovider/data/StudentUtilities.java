@@ -15,14 +15,14 @@ public class StudentUtilities {
 
     public static ArrayList<Student> getStudentList() {
         ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student(121, "Vicky", "Patel", "Toronto", "396110"));
+        students.add(new Student("Vicky", "Patel", "Toronto", "396110"));
         students.add(new Student("Jacky", "Patel", "Toronto", "ASD123"));
+        students.add(new Student("Roy", "Patel", "Sarnia", "M6R2H6"));
         return students;
     }
 
     public static ContentValues createStudentValues(Student student) {
         ContentValues studentValues = new ContentValues();
-        studentValues.put(StudentEntry._ID, student.getStudentId());
         studentValues.put(StudentEntry.COLUMN_NAME, student.getName());
         studentValues.put(StudentEntry.COLUMN_SURNAME, student.getSurname());
         studentValues.put(StudentEntry.COLUMN_ADDRESS, student.getAddress());

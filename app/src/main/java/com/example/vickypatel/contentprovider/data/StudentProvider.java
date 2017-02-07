@@ -38,6 +38,21 @@ public class StudentProvider extends ContentProvider{
         return matcher;
     }
 
+    @Nullable
+    @Override
+    public String getType(Uri uri) {
+        // Use the Uri Matcher to determine what kind of URI this is.
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            // Student: Uncomment and fill out these two cases
+            case STUDENT:
+                return StudentEntry.CONTENT_TYPE;
+            case STUDENT_WITH_NAME:
+                return StudentEntry.CONTENT_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+    }
 
     @Nullable
     @Override
@@ -46,8 +61,19 @@ public class StudentProvider extends ContentProvider{
             // and query the database accordingly.
             Cursor retCursor;
             switch (sUriMatcher.match(uri)) {
-                // "weather"
                 case STUDENT: {
+                    retCursor = mOpenHelper.getReadableDatabase().query(
+                            StudentEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder
+                    );
+                    break;
+                }
+                case STUDENT_WITH_NAME: {
                     retCursor = mOpenHelper.getReadableDatabase().query(
                             StudentEntry.TABLE_NAME,
                             projection,
@@ -67,22 +93,6 @@ public class StudentProvider extends ContentProvider{
             return retCursor;
     }
 
-    @Nullable
-    @Override
-    public String getType(Uri uri) {
-        // Use the Uri Matcher to determine what kind of URI this is.
-        final int match = sUriMatcher.match(uri);
-
-        switch (match) {
-            // Student: Uncomment and fill out these two cases
-            case STUDENT:
-                return StudentEntry.CONTENT_TYPE;
-            case STUDENT_WITH_NAME:
-                return StudentEntry.CONTENT_TYPE;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
-    }
 
     @Nullable
     @Override
@@ -94,7 +104,7 @@ public class StudentProvider extends ContentProvider{
         switch (match) {
             case STUDENT: {
                 long _id = db.insert(StudentEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if ( _id >= 0 )
                     returnUri = StudentEntry.buildStudentUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
