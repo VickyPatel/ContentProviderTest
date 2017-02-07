@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -21,6 +22,7 @@ public class StudentProvider extends ContentProvider{
     //Uri constants
     static final int STUDENT = 100;
     static final int STUDENT_WITH_NAME = 101;
+    static final int STUDENT_WITH_ZIP_CODE = 102;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -34,7 +36,8 @@ public class StudentProvider extends ContentProvider{
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = StudentContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, StudentContract.PATH_STUDENT, STUDENT);
-        matcher.addURI(authority, StudentContract.PATH_STUDENT + "/*", STUDENT_WITH_NAME);
+        matcher.addURI(authority, StudentContract.PATH_STUDENT + "/name", STUDENT_WITH_NAME);
+        matcher.addURI(authority, StudentContract.PATH_STUDENT + "/zipcode", STUDENT_WITH_ZIP_CODE);
         return matcher;
     }
 
@@ -49,6 +52,8 @@ public class StudentProvider extends ContentProvider{
                 return StudentEntry.CONTENT_TYPE;
             case STUDENT_WITH_NAME:
                 return StudentEntry.CONTENT_TYPE;
+            case STUDENT_WITH_ZIP_CODE:
+                return StudentEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -60,6 +65,9 @@ public class StudentProvider extends ContentProvider{
             // Here's the switch statement that, given a URI, will determine what kind of request it is,
             // and query the database accordingly.
             Cursor retCursor;
+
+            int match = sUriMatcher.match(uri);
+
             switch (sUriMatcher.match(uri)) {
                 case STUDENT: {
                     retCursor = mOpenHelper.getReadableDatabase().query(
@@ -74,10 +82,35 @@ public class StudentProvider extends ContentProvider{
                     break;
                 }
                 case STUDENT_WITH_NAME: {
-                    retCursor = mOpenHelper.getReadableDatabase().query(
-                            StudentEntry.TABLE_NAME,
+                    SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+                    sqLiteQueryBuilder.setTables(StudentEntry.TABLE_NAME);
+                    String nameSelection =
+                            StudentEntry.TABLE_NAME +
+                                    "." + StudentEntry.COLUMN_NAME + " = ? " ;
+
+                    retCursor = sqLiteQueryBuilder.query(
+                            mOpenHelper.getReadableDatabase(),
                             projection,
-                            selection,
+                            nameSelection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder
+                    );
+                    break;
+                }
+
+                case STUDENT_WITH_ZIP_CODE: {
+                    SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+                    sqLiteQueryBuilder.setTables(StudentEntry.TABLE_NAME);
+                    String nameSelection =
+                            StudentEntry.TABLE_NAME +
+                                    "." + StudentEntry.COLUMN_ZIP_CODE + " = ? " ;
+
+                    retCursor = sqLiteQueryBuilder.query(
+                            mOpenHelper.getReadableDatabase(),
+                            projection,
+                            nameSelection,
                             selectionArgs,
                             null,
                             null,

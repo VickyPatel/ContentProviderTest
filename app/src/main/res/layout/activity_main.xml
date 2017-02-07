@@ -40,4 +40,14 @@
         android:layout_below="@+id/get_data_button"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:text="Get Student by zip code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/get_data_by_name_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:id="@+id/get_data_by_zip_code_button"
+        android:textAllCaps="false"/>
+
 </RelativeLayout>
