@@ -1,10 +1,16 @@
 package com.example.vickypatel.contentprovider;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -44,11 +50,13 @@ public class MainActivity extends AppCompatActivity
         Button getDataButton = (Button) findViewById(R.id.get_data_button);
         Button getDataByNameButton = (Button) findViewById(R.id.get_data_by_name_button);
         Button getDataByZIPCodeButton = (Button) findViewById(R.id.get_data_by_zip_code_button);
+        Button createNotificationButton = (Button) findViewById(R.id.create_notification);
 
         setDataButton.setOnClickListener(this);
         getDataButton.setOnClickListener(this);
         getDataByNameButton.setOnClickListener(this);
         getDataByZIPCodeButton.setOnClickListener(this);
+        createNotificationButton.setOnClickListener(this);
 
         Cursor cursor = getContentResolver().query(
                 StudentEntry.CONTENT_URI,
@@ -95,8 +103,23 @@ public class MainActivity extends AppCompatActivity
             case R.id.get_data_by_zip_code_button:
                 getSupportLoaderManager().initLoader(
                         GET_DATA_BY_ZIP_CODE_LOADER_ID, null, this);
+            case R.id.create_notification:
+                createNotification();
                 break;
         }
+    }
+
+    private void createNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.art_snow)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!");
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(001, mBuilder.build());
+
     }
 
     @Override
