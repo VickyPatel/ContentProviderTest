@@ -15,10 +15,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <provider
-            android:authorities="com.example.vickypatel.contentprovider"
-            android:name=".data.StudentProvider" />
+            android:name=".data.StudentProvider"
+            android:authorities="com.example.vickypatel.contentprovider" />
+
+
+        <!-- activity to handle reply for pre-n devices -->
+        <activity android:name=".ReplyActivity"
+            android:theme="@style/AppTheme.Translucent"/>
+
+        <service
+            android:name=".NotificationService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>

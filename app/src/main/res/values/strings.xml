@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ContentProvider</string>
+    <string name="title_activity_notification_receiver">NotificationReceiverActivity</string>
+    <string name="reply_label">Reply</string>
+
+    <string name="text_show_notif">Show notification</string>
+
+    <string name="notif_content_sent">Sent</string>
+    <string name="notif_title">Message received</string>
+    <string name="notif_content">Please type your reply below</string>
+    <string name="notif_action_reply">Reply</string>
+    <string name="hint_reply">Write reply</string>
 </resources>

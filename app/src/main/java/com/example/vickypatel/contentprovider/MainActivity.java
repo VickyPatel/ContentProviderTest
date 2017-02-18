@@ -9,8 +9,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -35,6 +39,10 @@ public class MainActivity extends AppCompatActivity
     private static final int GET_DATA_LOADER_ID = 1;
     private static final int GET_DATA_BY_NAME_LOADER_ID = 2;
     private static final int GET_DATA_BY_ZIP_CODE_LOADER_ID = 3;
+    private static final String KEY_TEXT_REPLY = "key_text_reply";
+    private static final String REPLY_ACTION = "reply_action";
+    private static final String KEY_NOTIFICATION_ID = "notification_id";
+    private static final String KEY_MESSAGE_ID = "message_id";
 
     private ArrayList<Student> studentArrayList = new ArrayList<>();
     private ListViewAdapter adapter;
@@ -110,17 +118,83 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void createNotification() {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.art_snow)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(this)
+//                        .setSmallIcon(R.drawable.art_fog)
+//                        .setContentTitle("My notification")
+//                        .setContentText("Hello World!");
+//// Creates an explicit intent for an Activity in your app
+//        Intent resultIntent = new Intent(this, NotificationReceiverActivity.class);
+//
+//// The stack builder object will contain an artificial back stack for the
+//// started Activity.
+//// This ensures that navigating backward from the Activity leads out of
+//// your application to the Home screen.
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//// Adds the back stack for the Intent (but not the Intent itself)
+//        stackBuilder.addParentStack(NotificationReceiverActivity.class);
+//// Adds the Intent that starts the Activity to the top of the stack
+//        stackBuilder.addNextIntent(resultIntent);
+//        PendingIntent resultPendingIntent =
+//                stackBuilder.getPendingIntent(
+//                        0,
+//                        PendingIntent.FLAG_UPDATE_CURRENT
+//                );
+//        mBuilder.setContentIntent(resultPendingIntent);
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+////        NotificationCompat.InboxStyle inboxStyle =
+////                new NotificationCompat.InboxStyle();
+////        String[] events = new String[]{"Ok","Cancel"};
+////// Sets a title for the Inbox in expanded layout
+////        inboxStyle.setBigContentTitle("Event tracker details:");
+////
+////// Moves events into the expanded layout
+////        for (int i = 0; i < events.length; i++) {
+////
+////            inboxStyle.addLine(events[i]);
+////        }
+////// Moves the expanded layout object into the notification object.
+////        mBuilder.setStyle(inboxStyle);
+//        mBuilder.setAutoCancel(true);
+//
+//
+//        int notificationId = 0;
+//
+//        // Create the reply action and add the remote input.
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+//
+//            //Reply
+//            String replyLabel = getResources().getString(R.string.reply_label);
+//            RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+//                    .setLabel(replyLabel)
+//                    .build();
+//
+//            NotificationCompat.Action action =
+//                    new NotificationCompat.Action.Builder(R.drawable.ic_fog,
+//                            "Lable", resultPendingIntent)
+//                            .addRemoteInput(remoteInput)
+//                            .build();
+//
+//            // Build the notification and add the action.
+//            Notification newMessageNotification =
+//                    new NotificationCompat.Builder(this)
+//                            .setSmallIcon(R.drawable.art_clouds)
+//                            .setContentTitle("Title")
+//                            .setContentText("content")
+//                            .addAction(action).build();
+//
+//
+//            mNotificationManager.notify(notificationId, newMessageNotification);
+//        }else{
+//            mNotificationManager.notify(notificationId, mBuilder.build());
+//        }
 
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(001, mBuilder.build());
+        startService(new Intent(this, NotificationService.class));
 
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
